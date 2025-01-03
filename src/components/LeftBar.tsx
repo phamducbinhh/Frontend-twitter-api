@@ -2,7 +2,6 @@
 import { useVerifiedUserValidator } from "@/queries/useAuth";
 import Link from "next/link";
 import CustomImage from "./CustomImage";
-import Image from "./Image";
 
 const menuList = [
   {
@@ -59,12 +58,6 @@ const menuList = [
     link: "/",
     icon: "profile.svg",
   },
-  {
-    id: 10,
-    name: "More",
-    link: "/",
-    icon: "more.svg",
-  },
 ];
 
 const LeftBar = () => {
@@ -78,7 +71,7 @@ const LeftBar = () => {
       <div className="flex flex-col gap-4 text-lg items-center xxl:items-start">
         {/* LOGO */}
         <Link href="/" className="p-2 rounded-full hover:bg-[#181818] ">
-          <Image path="icons/logo.svg" alt="logo" w={24} h={24} />
+          <CustomImage src="icons/logo.svg" alt="logo" width={24} height={24} />
         </Link>
         {/* MENU LIST */}
         <div className="flex flex-col gap-4">
@@ -88,11 +81,11 @@ const LeftBar = () => {
               className="p-2 rounded-full hover:bg-[#181818] flex items-center gap-4"
               key={item.id}
             >
-              <Image
-                path={`icons/${item.icon}`}
+              <CustomImage
+                src={`icons/${item.icon}`}
                 alt={item.name}
-                w={24}
-                h={24}
+                width={24}
+                height={24}
               />
               <span className="hidden xxl:inline">{item.name}</span>
             </Link>
@@ -103,7 +96,12 @@ const LeftBar = () => {
           href="/compose/post"
           className="bg-white text-black rounded-full w-12 h-12 flex items-center justify-center xxl:hidden"
         >
-          <Image path="icons/post.svg" alt="new post" w={24} h={24} />
+          <CustomImage
+            src="icons/post.svg"
+            alt="new post"
+            width={24}
+            height={24}
+          />
         </Link>
         <Link
           href="/compose/post"
