@@ -6,4 +6,8 @@ export const APP_API_ENDPOINT = Object.freeze({
     VERIFIED_USER_VALIDATOR: "/api/v1/user/profile",
     LOG_OUT: "/api/v1/auth/logout",
   },
+  TWITTER: {
+    GET_NEWS_FEED_TWEET: ({ limit }: { limit: number }) =>
+      `/api/v1/tweet?limit=${limit}`,
+  },
 });

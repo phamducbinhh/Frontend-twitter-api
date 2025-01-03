@@ -1,14 +1,9 @@
-import Post from "./Post"
+import Post from "./Post";
 
-const Feed = () => {
+export default async function Feed() {
   return (
-    <div className=''>
-      <Post/>
-      <Post/>
-      <Post/>
-      <Post/>
-    </div>
-  )
+    <>
+      <Post />
+    </>
+  );
 }
-
-export default Feed
