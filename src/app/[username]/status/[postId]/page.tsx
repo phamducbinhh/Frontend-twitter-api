@@ -1,6 +1,7 @@
 import Comments from "@/components/Comments";
 import Image from "@/components/Image";
 import Post from "@/components/Post";
+import { TweetType } from "@/constants/enums";
 import Link from "next/link";
 
 const StatusPage = () => {
@@ -12,8 +13,8 @@ const StatusPage = () => {
         </Link>
         <h1 className="font-bold text-lg">Post</h1>
       </div>
-      <Post type="status"/>
-      <Comments/>
+      <Post type={TweetType.Tweet} />
+      <Comments />
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { LogOut, MoreHorizontal, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import CustomImage from "./CustomImage";
+import Image from "./Image";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
@@ -98,7 +99,7 @@ const LeftBar = () => {
       <div className="flex flex-col gap-4 text-lg items-center xxl:items-start">
         {/* LOGO */}
         <Link href="/" className="p-2 rounded-full hover:bg-[#181818] ">
-          <CustomImage src="icons/logo.svg" alt="logo" width={24} height={24} />
+          <Image path="icons/logo.svg" alt="logo" w={24} h={24} />
         </Link>
         {/* MENU LIST */}
         <div className="flex flex-col gap-4">
@@ -108,11 +109,11 @@ const LeftBar = () => {
               className="p-2 rounded-full hover:bg-[#181818] flex items-center gap-4"
               key={item.id}
             >
-              <CustomImage
-                src={`icons/${item.icon}`}
+              <Image
+                path={`icons/${item.icon}`}
                 alt={item.name}
-                width={24}
-                height={24}
+                w={24}
+                h={24}
               />
               <span className="hidden xxl:inline">{item.name}</span>
             </Link>

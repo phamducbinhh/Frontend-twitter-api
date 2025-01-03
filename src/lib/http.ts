@@ -52,7 +52,7 @@ export class ApiClient {
     const token = this.isClient() ? "" : config.token;
 
     if (token) {
-      headers.Authorization = token;
+      headers.Authorization = `Bearer ${token}`;
     }
 
     if (config.body && config.method !== METHOD_TYPE.GET) {

@@ -1,42 +1,16 @@
-import { imagekit } from "@/utils";
+import { TweetType } from "@/constants/enums";
+import { AvatarImage } from "@radix-ui/react-avatar";
+import Link from "next/link";
 import Image from "./Image";
 import PostInfo from "./PostInfo";
 import PostInteractions from "./PostInteractions";
-import Video from "./Video";
-import Link from "next/link";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 
-interface FileDetailsResponse {
-  width: number;
-  height: number;
-  filePath: string;
-  url: string;
-  fileType: string;
-  customMetadata?: { sensitive: boolean };
-}
-
-const Post = async ({ type }: { type?: "status" | "comment" }) => {
- 
-  // FETCH POST MEDIA
-
-  // const getFileDetails = async (
-  //   fileId: string
-  // ): Promise<FileDetailsResponse> => {
-  //   return new Promise((resolve, reject) => {
-  //     imagekit.getFileDetails(fileId, function (error, result) {
-  //       if (error) reject(error);
-  //       else resolve(result as FileDetailsResponse);
-  //     });
-  //   });
-  // };
-
-  // const fileDetails = await getFileDetails("675d943be375273f6003858f");
-
-  // console.log(fileDetails);
-
+const Post = async ({ type }: { type?: TweetType }) => {
   return (
     <div className="p-4 border-y-[1px] border-borderGray">
       {/* POST TYPE */}
-      <div className="flex items-center gap-2 text-sm text-textGray mb-2 from-bold">
+      <div className="flex items-center gap-2 text-sm text-textGray mb-2 font-bold">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="18"
@@ -51,14 +25,17 @@ const Post = async ({ type }: { type?: "status" | "comment" }) => {
         <span>Lama Dev reposted</span>
       </div>
       {/* POST CONTENT */}
-      <div className={`flex gap-4 ${type === "status" && "flex-col"}`}>
+      <div className={`flex gap-4 ${type === TweetType.Tweet && "flex-col"}`}>
         {/* AVATAR */}
         <div
           className={`${
-            type === "status" && "hidden"
+            type === TweetType.Tweet && "hidden"
           } relative w-10 h-10 rounded-full overflow-hidden`}
         >
-          <Image path="general/avatar.png" alt="" w={100} h={100} tr={true} />
+          <Avatar>
+            <AvatarImage src={"/general/avatar.png"} />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
         </div>
         {/* CONTENT */}
         <div className="flex-1 flex flex-col gap-2">
@@ -67,29 +44,28 @@ const Post = async ({ type }: { type?: "status" | "comment" }) => {
             <Link href={`/lamaWebDev`} className="flex gap-4">
               <div
                 className={`${
-                  type !== "status" && "hidden"
+                  type !== TweetType.Tweet && "hidden"
                 } relative w-10 h-10 rounded-full overflow-hidden`}
               >
-                <Image
-                  path="general/avatar.png"
-                  alt=""
-                  w={100}
-                  h={100}
-                  tr={true}
-                />
+                <Avatar>
+                  <AvatarImage src={"/general/avatar.png"} />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
               </div>
               <div
                 className={`flex items-center gap-2 flex-wrap ${
-                  type === "status" && "flex-col gap-0 !items-start"
+                  type === TweetType.Tweet && "flex-col gap-0 !items-start"
                 }`}
               >
                 <h1 className="text-md font-bold">Lama Dev</h1>
                 <span
-                  className={`text-textGray ${type === "status" && "text-sm"}`}
+                  className={`text-textGray ${
+                    type === TweetType.Tweet && "text-sm"
+                  }`}
                 >
                   @lamaWebDev
                 </span>
-                {type !== "status" && (
+                {type !== TweetType.Tweet && (
                   <span className="text-textGray">1 day ago</span>
                 )}
               </div>
@@ -98,7 +74,7 @@ const Post = async ({ type }: { type?: "status" | "comment" }) => {
           </div>
           {/* TEXT & MEDIA */}
           <Link href={`/lamaWebDev/status/123`}>
-            <p className={`${type === "status" && "text-lg"}`}>
+            <p className={`${type === TweetType.Tweet && "text-lg"}`}>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum,
               animi. Laborum commodi aliquam alias molestias odio, ab in,
               reprehenderit excepturi temporibus, ducimus necessitatibus fugiat
@@ -106,22 +82,8 @@ const Post = async ({ type }: { type?: "status" | "comment" }) => {
             </p>
           </Link>
           <Image path="general/post.jpeg" alt="" w={600} h={600} />
-          {/* AFTER FETCHING THE POST MEDIA */}
-          {/* {fileDetails && fileDetails.fileType === "image" ? (
-            <Image
-              path={fileDetails.filePath}
-              alt=""
-              w={fileDetails.width}
-              h={fileDetails.height}
-              className={fileDetails.customMetadata?.sensitive ? "blur-lg" : ""}
-            />
-          ) : (
-            <Video
-              path={fileDetails.filePath}
-              className={fileDetails.customMetadata?.sensitive ? "blur-lg" : ""}
-            />
-          )} */}
-          {type === "status" && (
+
+          {type === TweetType.Tweet && (
             <span className="text-textGray">8:41 PM · Dec 5, 2024</span>
           )}
           <PostInteractions />
