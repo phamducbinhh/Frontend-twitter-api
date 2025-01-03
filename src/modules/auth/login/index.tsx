@@ -2,17 +2,45 @@
 
 import { Icons } from "@/components/Icons";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+// Schema xác thực với zod
+const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginModule() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  async function onSubmit(event: React.FormEvent) {
-    event.preventDefault();
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  async function onSubmit(data: LoginFormValues) {
     setIsLoading(true);
 
+    console.log("Form data:", data);
+
+    // Fake API call
     setTimeout(() => {
       setIsLoading(false);
     }, 3000);
@@ -36,7 +64,7 @@ export default function LoginModule() {
           <div className="space-y-4">
             <Button
               variant="outline"
-              className="w-full bg-black hover:bg-zinc-900 border-zinc-700 text-white"
+              className="w-full bg-black border-zinc-700 text-white"
               disabled={isLoading}
             >
               <Icons.google className="mr-2 h-4 w-4" />
@@ -45,7 +73,7 @@ export default function LoginModule() {
 
             <Button
               variant="outline"
-              className="w-full bg-black hover:bg-zinc-900 border-zinc-700 text-white"
+              className="w-full bg-black border-zinc-700 text-white"
               disabled={isLoading}
             >
               <Icons.apple className="mr-2 h-4 w-4" />
@@ -60,36 +88,60 @@ export default function LoginModule() {
                 <span className="bg-black px-2 text-zinc-500">Or</span>
               </div>
             </div>
+          </div>
 
-            <form onSubmit={onSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-zinc-400">
-                  Email or username
-                </Label>
-                <Input
-                  id="email"
-                  placeholder="name@example.com"
-                  type="text"
-                  autoCapitalize="none"
-                  autoComplete="email"
-                  autoCorrect="off"
-                  disabled={isLoading}
-                  className="bg-black border-zinc-700 text-white placeholder:text-zinc-500 focus-visible:ring-blue-500"
-                />
-              </div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              {/* Email field */}
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label htmlFor="email" className="text-zinc-400">
+                      Email or username
+                    </Label>
+                    <FormControl>
+                      <Input
+                        id="email"
+                        placeholder="name@example.com"
+                        autoCapitalize="none"
+                        autoComplete="email"
+                        autoCorrect="off"
+                        disabled={isLoading}
+                        className="bg-black border-zinc-700 text-white placeholder:text-zinc-500 focus-visible:ring-blue-500"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-zinc-400">
-                  Password
-                </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  disabled={isLoading}
-                  className="bg-black border-zinc-700 text-white placeholder:text-zinc-500 focus-visible:ring-blue-500"
-                />
-              </div>
+              {/* Password field */}
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label htmlFor="password" className="text-zinc-400">
+                      Password
+                    </Label>
+                    <FormControl>
+                      <Input
+                        id="password"
+                        type="password"
+                        disabled={isLoading}
+                        className="bg-black border-zinc-700 text-white placeholder:text-zinc-500 focus-visible:ring-blue-500"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
+              {/* Submit button */}
               <Button
                 type="submit"
                 className="w-full bg-white text-black hover:bg-zinc-200"
@@ -101,15 +153,15 @@ export default function LoginModule() {
                 Sign in
               </Button>
             </form>
+          </Form>
 
-            <Button
-              variant="link"
-              className="w-full text-blue-500 hover:text-blue-600"
-              disabled={isLoading}
-            >
-              Forgot password?
-            </Button>
-          </div>
+          <Button
+            variant="link"
+            className="w-full text-blue-500 hover:text-blue-600"
+            disabled={isLoading}
+          >
+            Forgot password?
+          </Button>
 
           <p className="text-zinc-400 text-center">
             Don&apos;t have an account?{" "}
