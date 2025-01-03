@@ -120,3 +120,12 @@ export const formatLastChangedTime = (date: string): string => {
   }
   return Math.floor(seconds) + " giây trước";
 };
+
+export const formatDateString = (isoString: string) => {
+  const date = new Date(isoString);
+  const options = { year: "numeric", month: "long" }; // Định dạng chỉ hiển thị tháng và năm
+  return date.toLocaleDateString(
+    "en-US",
+    options as Intl.DateTimeFormatOptions
+  );
+};

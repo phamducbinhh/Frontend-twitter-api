@@ -10,4 +10,7 @@ export const APP_API_ENDPOINT = Object.freeze({
     GET_NEWS_FEED_TWEET: ({ limit }: { limit: number }) =>
       `/api/v1/tweet?limit=${limit}`,
   },
+  USER: {
+    GET_PROFILE: ({ name }: { name: string }) => `/api/v1/user/${name}`,
+  },
 });
