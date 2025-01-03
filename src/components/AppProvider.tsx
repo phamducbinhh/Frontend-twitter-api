@@ -1,4 +1,5 @@
 "use client";
+import SettingsProvider from "@/components/SettingsProvider";
 import { AuthProvider } from "@/context/AuthContext";
 import React from "react";
 import { ToastContainer } from "react-toastify";
@@ -10,13 +11,15 @@ export default function AppProvider({
   children: React.ReactNode;
 }) {
   return (
-    <AuthProvider>
-      {children}
-      <ToastContainer
-        position="bottom-right"
-        autoClose={2500}
-        pauseOnHover={false}
-      />
-    </AuthProvider>
+    <SettingsProvider>
+      <AuthProvider>
+        {children}
+        <ToastContainer
+          position="bottom-right"
+          autoClose={2500}
+          pauseOnHover={false}
+        />
+      </AuthProvider>
+    </SettingsProvider>
   );
 }

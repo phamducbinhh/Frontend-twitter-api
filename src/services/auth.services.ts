@@ -33,10 +33,10 @@ class AuthApiRequest {
     });
   }
 
-  public VerifiedUserValidator({ token }: { token: string }): Promise<any> {
+  public VerifiedUserValidator(): Promise<any> {
     return apiBaseServiceInstance.Http({
       path: APP_API_ENDPOINT.AUTH.VERIFIED_USER_VALIDATOR,
-      config: { method: METHOD_TYPE.GET, token },
+      config: { method: METHOD_TYPE.GET },
     });
   }
 }

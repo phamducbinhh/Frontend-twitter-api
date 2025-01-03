@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 import { ReactNode, createContext, useContext, useState } from "react";
 
 type AuthContextType = {
