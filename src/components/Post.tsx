@@ -44,7 +44,7 @@ const Post = async ({ type, data }: { type?: TweetType; data?: any }) => {
         <div className="flex-1 flex flex-col gap-2">
           {/* TOP */}
           <div className="w-full flex justify-between">
-            <Link href={`/${data?.id}`} className="flex gap-4">
+            <Link href={`/${data?.author?.name}`} className="flex gap-4">
               <div
                 className={`${
                   type !== TweetType.Tweet && "hidden"
