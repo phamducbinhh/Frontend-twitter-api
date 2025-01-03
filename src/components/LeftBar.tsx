@@ -1,8 +1,19 @@
 "use client";
-import { useVerifiedUserValidator } from "@/queries/useAuth";
+import { HttpStatusCode } from "@/constants/httpStatusCode.enum";
+import { useLogoutMutation, useVerifiedUserValidator } from "@/queries/useAuth";
+import { LogOut, MoreHorizontal, User } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import CustomImage from "./CustomImage";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 const menuList = [
   {
@@ -62,9 +73,24 @@ const menuList = [
 ];
 
 const LeftBar = () => {
+  const logoutMutation = useLogoutMutation();
+
   const { data, isLoading } = useVerifiedUserValidator();
 
   const { name, username, avatar } = data?.data || {};
+
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      const response = await logoutMutation.mutateAsync();
+      if (response?.status === HttpStatusCode.Ok) {
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
     <div className="h-screen sticky top-0 flex flex-col justify-between pt-2 pb-8">
@@ -135,7 +161,29 @@ const LeftBar = () => {
             )}
           </div>
         </div>
-        <div className="hidden xxl:block cursor-pointer font-bold">...</div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <MoreHorizontal className="h-5 w-5" />
+              <span className="sr-only">Open user menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuItem className="flex items-center gap-2">
+              <User className="h-4 w-4" />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="flex items-center gap-2 text-red-600 focus:text-red-600"
+              onClick={handleLogout}
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );
