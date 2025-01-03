@@ -7,6 +7,9 @@ import PostInteractions from "./PostInteractions";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 
 const Post = async ({ type, data }: { type?: TweetType; data?: any }) => {
+  if (!data) {
+    return null;
+  }
   return (
     <div className="p-4 border-y-[1px] border-borderGray">
       {/* POST TYPE */}
@@ -41,7 +44,7 @@ const Post = async ({ type, data }: { type?: TweetType; data?: any }) => {
         <div className="flex-1 flex flex-col gap-2">
           {/* TOP */}
           <div className="w-full flex justify-between">
-            <Link href={`/lamaWebDev`} className="flex gap-4">
+            <Link href={`/${data?.id}`} className="flex gap-4">
               <div
                 className={`${
                   type !== TweetType.Tweet && "hidden"
@@ -73,7 +76,7 @@ const Post = async ({ type, data }: { type?: TweetType; data?: any }) => {
             <PostInfo />
           </div>
           {/* TEXT & MEDIA */}
-          <Link href={`/lamaWebDev/status/123`}>
+          <Link href={`/${data?.id}`}>
             <p className={`${type === TweetType.Tweet && "text-lg"}`}>
               {data.content}
             </p>
