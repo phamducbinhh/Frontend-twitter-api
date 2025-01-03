@@ -1,5 +1,4 @@
 "use client";
-
 import { Icons } from "@/components/Icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,9 +10,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { HttpStatusCode } from "@/constants/httpStatusCode.enum";
+import { useLoginMutation } from "@/queries/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { z } from "zod";
 
 // Schema xác thực với zod
@@ -26,6 +28,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginModule() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const loginMutation = useLoginMutation();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -35,16 +38,27 @@ export default function LoginModule() {
     },
   });
 
-  async function onSubmit(data: LoginFormValues) {
+  const handleSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
+    try {
+      const response = await loginMutation.mutateAsync(data);
+      const { status, data: responseData } = response;
 
-    console.log("Form data:", data);
-
-    // Fake API call
-    setTimeout(() => {
+      if (status === HttpStatusCode.Ok) {
+        toast.success("Login successfully", {
+          type: "success",
+          theme: "colored",
+        });
+      } else {
+        const errorMessage = responseData?.message;
+        toast.error(errorMessage, { type: "error", theme: "colored" });
+      }
+    } catch (error: any) {
+      toast.error(error.message, { type: "error", theme: "colored" });
+    } finally {
       setIsLoading(false);
-    }, 3000);
-  }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white flex">
@@ -91,7 +105,10 @@ export default function LoginModule() {
           </div>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-4"
+            >
               {/* Email field */}
               <FormField
                 control={form.control}

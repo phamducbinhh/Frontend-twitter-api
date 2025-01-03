@@ -54,7 +54,8 @@ export const removeWhitespace = (str: string | any) => {
 };
 
 export const normalizePath = (path: string) => {
-  return path.startsWith("/") ? path.slice(1) : path;
+  const normalizedPath = path.startsWith("/") ? path.slice(8) : path;
+  return normalizedPath;
 };
 
 export const formatPrize = (prize: number | string) => {

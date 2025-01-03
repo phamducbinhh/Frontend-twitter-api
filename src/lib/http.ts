@@ -115,13 +115,13 @@ export class ApiClient {
       }
 
       const normalizedPath = normalizePath(path);
+
       if (
         [
-          "login",
-          "register",
-          "login/google",
-          "login/facebook",
-          "logout",
+          "auth/login",
+          "auth/register",
+          "auth/login/google",
+          "auth/logout",
         ].includes(normalizedPath)
       ) {
         return response;
