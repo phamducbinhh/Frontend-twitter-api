@@ -9,11 +9,16 @@ const nextConfig: NextConfig = {
         hostname: "ik.imagekit.io",
         port: "",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "5000",
+      },
     ],
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: '50mb',
+      bodySizeLimit: "50mb",
     },
   },
 };

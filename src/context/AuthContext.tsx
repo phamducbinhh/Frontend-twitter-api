@@ -1,4 +1,12 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import { useVerifiedUserValidator } from "@/queries/useAuth";
+import { useGlobalStore } from "@/stores/state";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useLayoutEffect,
+  useState,
+} from "react";
 
 type AuthContextType = {
   isAuthenticated: boolean;
@@ -12,6 +20,15 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { refetch } = useVerifiedUserValidator();
+  const { isLoggedIn } = useGlobalStore();
+
+  useLayoutEffect(() => {
+    if (isLoggedIn) {
+      refetch();
+      setIsAuthenticated(isLoggedIn);
+    }
+  }, [isLoggedIn, refetch]);
 
   const value: AuthContextType = {
     isAuthenticated,

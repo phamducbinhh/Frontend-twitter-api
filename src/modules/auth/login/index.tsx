@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { HttpStatusCode } from "@/constants/httpStatusCode.enum";
 import { useLoginMutation } from "@/queries/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -29,6 +30,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function LoginModule() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const loginMutation = useLoginMutation();
+  const router = useRouter();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -45,6 +47,7 @@ export default function LoginModule() {
       const { status, data: responseData } = response;
 
       if (status === HttpStatusCode.Ok) {
+        router.push("/");
         toast.success("Login successfully", {
           type: "success",
           theme: "colored",
