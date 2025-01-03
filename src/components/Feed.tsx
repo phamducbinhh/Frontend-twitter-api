@@ -20,7 +20,7 @@ export default async function Feed() {
   return (
     <>
       {tweets?.items.map((tweet: any) => {
-        return <Post key={tweet.id} />;
+        return <Post key={tweet.id} data={tweet} />;
       })}
     </>
   );
