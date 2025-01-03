@@ -2,6 +2,7 @@
 import { useVerifiedUserValidator } from "@/queries/useAuth";
 import Link from "next/link";
 import CustomImage from "./CustomImage";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const menuList = [
   {
@@ -115,7 +116,10 @@ const LeftBar = () => {
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 relative rounded-full overflow-hidden">
             {!isLoading && data ? (
-              <CustomImage src={avatar} alt="avatar" width={100} height={100} />
+              <Avatar>
+                <AvatarImage src={avatar} />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
             ) : (
               <span>Loading...</span>
             )}
