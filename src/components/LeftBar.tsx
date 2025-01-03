@@ -141,14 +141,10 @@ const LeftBar = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 relative rounded-full overflow-hidden">
-            {!isLoading && data ? (
-              <Avatar>
-                <AvatarImage src={avatar} />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            ) : (
-              <span>Loading...</span>
-            )}
+            <Avatar>
+              <AvatarImage src={avatar} />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
           </div>
           <div className="hidden xxl:flex flex-col">
             {!isLoading && data ? (

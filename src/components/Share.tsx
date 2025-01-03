@@ -1,14 +1,19 @@
 "use client";
 
+import { shareAction } from "@/actions";
+import { useVerifiedUserValidator } from "@/queries/useAuth";
+import NextImage from "next/image";
 import React, { useState } from "react";
 import Image from "./Image";
-import NextImage from "next/image";
-import { shareAction } from "@/actions";
 import ImageEditor from "./ImageEditor";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const Share = () => {
   const [media, setMedia] = useState<File | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const { data } = useVerifiedUserValidator();
+
+  const { avatar } = data?.data || {};
   const [settings, setSettings] = useState<{
     type: "original" | "wide" | "square";
     sensitive: boolean;
@@ -32,7 +37,10 @@ const Share = () => {
     >
       {/* AVATAR */}
       <div className="relative w-10 h-10 rounded-full overflow-hidden">
-        <Image path="general/avatar.png" alt="" w={100} h={100} tr={true} />
+        <Avatar>
+          <AvatarImage src={avatar} />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
       </div>
       {/* OTHERS */}
       <div className="flex-1 flex flex-col gap-4">
