@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { HttpStatusCode } from "@/constants/httpStatusCode.enum";
 import { useToast } from "@/hooks/use-toast";
-import { useLoginMutation } from "@/queries/useAuth";
+import { useRegisterMutation } from "@/queries/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -21,37 +21,43 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 // Schema xác thực với zod
-const loginSchema = z.object({
+const registerSchema = z.object({
+  name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  confirm_password: z.string().min(6, "Password must be at least 6 characters"),
+  date_of_birth: z.string().min(1, "Date of birth is required"),
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
-export default function LoginModule() {
+export default function RegisterModule() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const loginMutation = useLoginMutation();
+  const registerMutation = useRegisterMutation();
   const router = useRouter();
   const { toast } = useToast();
 
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
+      confirm_password: "",
+      date_of_birth: "",
     },
   });
 
-  const handleSubmit = async (data: LoginFormValues) => {
+  const handleSubmit = async (data: RegisterFormValues) => {
     setIsLoading(true);
     try {
-      const response = await loginMutation.mutateAsync(data);
+      const response = await registerMutation.mutateAsync(data);
       const { status, data: responseData } = response;
 
-      if (status === HttpStatusCode.Ok) {
+      if (status === HttpStatusCode.Created) {
         router.push("/");
         toast({
-          description: "Login successfully",
+          description: "Register successfully",
         });
       } else {
         const errorMessage = responseData?.message;
@@ -82,7 +88,7 @@ export default function LoginModule() {
         <div className="w-full max-w-md space-y-8">
           <div className="space-y-2">
             <Icons.xLogo className="w-10 h-10 text-white lg:hidden" />
-            <h1 className="text-3xl font-bold">Sign in to X</h1>
+            <h1 className="text-3xl font-bold">Sign Up to X</h1>
           </div>
 
           <div className="space-y-4">
@@ -119,6 +125,31 @@ export default function LoginModule() {
               onSubmit={form.handleSubmit(handleSubmit)}
               className="space-y-4"
             >
+              {/* Name field */}
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label htmlFor="name" className="text-zinc-400">
+                      Name
+                    </Label>
+                    <FormControl>
+                      <Input
+                        id="name"
+                        placeholder="Elon musk"
+                        autoCapitalize="none"
+                        autoComplete="name"
+                        autoCorrect="off"
+                        disabled={isLoading}
+                        className="bg-black border-zinc-700 text-white placeholder:text-zinc-500 focus-visible:ring-blue-500"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               {/* Email field */}
               <FormField
                 control={form.control}
@@ -168,6 +199,52 @@ export default function LoginModule() {
                 )}
               />
 
+              {/* Confirm password field */}
+              <FormField
+                control={form.control}
+                name="confirm_password"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label htmlFor="confirm_password" className="text-zinc-400">
+                      Confirm password
+                    </Label>
+                    <FormControl>
+                      <Input
+                        id="confirm_password"
+                        type="password"
+                        disabled={isLoading}
+                        className="bg-black border-zinc-700 text-white placeholder:text-zinc-500 focus-visible:ring-blue-500"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Date of birth field */}
+              <FormField
+                control={form.control}
+                name="date_of_birth"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label htmlFor="date_of_birth" className="text-zinc-400">
+                      Date of birth
+                    </Label>
+                    <FormControl>
+                      <Input
+                        id="date_of_birth"
+                        type="date"
+                        disabled={isLoading}
+                        className="bg-black border-zinc-700 text-white placeholder:text-zinc-500 focus-visible:ring-blue-500"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               {/* Submit button */}
               <Button
                 type="submit"
@@ -192,13 +269,13 @@ export default function LoginModule() {
 
           <p className="text-zinc-400 text-center">
             Don&apos;t have an account?{" "}
-            <Link href={"/register"}>
+            <Link href={"/login"}>
               <Button
                 variant="link"
                 className="text-blue-500 hover:text-blue-600 p-0"
                 disabled={isLoading}
               >
-                Sign up
+                Sign in
               </Button>
             </Link>
           </p>

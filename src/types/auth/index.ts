@@ -9,9 +9,11 @@ export type TLoginAuth = {
   password: string;
 };
 export type TRegisterAuth = {
-  username: string;
+  name: string;
+  email: string;
   password: string;
   passwordConfirm?: string;
+  date_of_birth: string;
 };
 
 export type TUser = {
