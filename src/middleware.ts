@@ -7,9 +7,17 @@ const privatePaths = ["/dashboard", "/profile", "/"];
 // Đường dẫn chỉ dành cho người dùng chưa đăng nhập
 const authPaths = ["/login", "/register"];
 
+// Đường dẫn công khai cho tất cả người dùng
+const publicPaths = ["/email-verifications"];
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl; // Lấy đường dẫn hiện tại
   const accessToken = request.cookies.get("token")?.value; // Lấy token từ cookie
+
+  // Nếu đường dẫn nằm trong publicPaths, cho phép truy cập
+  if (publicPaths.some((path) => pathname.startsWith(path))) {
+    return NextResponse.next();
+  }
 
   // Nếu người dùng chưa đăng nhập
   if (!accessToken) {
@@ -37,5 +45,4 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: ["/((?!api|_next|static|favicon.ico).*)"],
-  // Matcher áp dụng middleware cho tất cả các route ngoại trừ các route không cần kiểm tra
 };
