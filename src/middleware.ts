@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 // Đường dẫn yêu cầu người dùng đã đăng nhập
-const privatePaths = ["/dashboard", "/profile", "/"];
+const privatePaths = ["/dashboard", "/profile", "/", "/messenger"];
 
 // Đường dẫn chỉ dành cho người dùng chưa đăng nhập
 const authPaths = ["/login", "/register"];
