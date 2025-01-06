@@ -14,7 +14,21 @@ type ImageType = {
 const urlEndpoint = process.env.NEXT_PUBLIC_URL_ENDPOINT;
 
 if (!urlEndpoint) {
-  throw new Error('Error: Please add urlEndpoint to .env or .env.local')
+  throw new Error("Error: Please add urlEndpoint to .env or .env.local");
+}
+
+if (process.env.NODE_ENV === "development") {
+  const originalWarn = console.warn;
+  console.warn = (message, ...args) => {
+    if (
+      message.includes(
+        "In [imagekitio-next], loading is set to eager when LQIP is used"
+      )
+    ) {
+      return; // Suppress the specific warning
+    }
+    originalWarn(message, ...args);
+  };
 }
 
 const Image = ({ path, w, h, alt, className, tr }: ImageType) => {
