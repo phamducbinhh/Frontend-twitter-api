@@ -1,44 +1,80 @@
+"use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import envConfig from "@/configs/env";
 import { ArrowLeft, Send } from "lucide-react";
 import Link from "next/link";
-
-const conversations = [
-  { id: 1, name: "John Doe", lastMessage: "Hey, how's it going?", time: "2m" },
-  {
-    id: 2,
-    name: "Jane Smith",
-    lastMessage: "Did you see the latest tweet?",
-    time: "1h",
-  },
-  {
-    id: 3,
-    name: "Bob Johnson",
-    lastMessage: "Let's catch up soon!",
-    time: "2h",
-  },
-];
-
-const messages = [
-  { id: 1, sender: "John Doe", content: "Hey there!", time: "10:30 AM" },
-  { id: 2, sender: "You", content: "Hi John! How are you?", time: "10:31 AM" },
-  {
-    id: 3,
-    sender: "John Doe",
-    content: "I'm good, thanks! How about you?",
-    time: "10:32 AM",
-  },
-  {
-    id: 4,
-    sender: "You",
-    content: "Doing well, thanks for asking!",
-    time: "10:33 AM",
-  },
-];
-
+import { useEffect } from "react";
+import { io } from "socket.io-client";
 export default function MessengerModule() {
+  const conversations = [
+    {
+      id: 1,
+      name: "John Doe",
+      lastMessage: "Hey, how's it going?",
+      time: "2m",
+    },
+    {
+      id: 2,
+      name: "Jane Smith",
+      lastMessage: "Did you see the latest tweet?",
+      time: "1h",
+    },
+    {
+      id: 3,
+      name: "Bob Johnson",
+      lastMessage: "Let's catch up soon!",
+      time: "2h",
+    },
+  ];
+
+  const messages = [
+    { id: 1, sender: "John Doe", content: "Hey there!", time: "10:30 AM" },
+    {
+      id: 2,
+      sender: "You",
+      content: "Hi John! How are you?",
+      time: "10:31 AM",
+    },
+    {
+      id: 3,
+      sender: "John Doe",
+      content: "I'm good, thanks! How about you?",
+      time: "10:32 AM",
+    },
+    {
+      id: 4,
+      sender: "You",
+      content: "Doing well, thanks for asking!",
+      time: "10:33 AM",
+    },
+  ];
+
+  useEffect(() => {
+    const socket = io(envConfig.NEXT_PUBLIC_API_ENDPOINT);
+
+    socket.on("connect", () => {
+      console.log("Connected to server");
+
+      // gửi emit từ client đến server
+      socket.emit("message", "Hello from client!");
+    });
+    // lắng nghe emit từ server
+    socket.on("message", (message: string) => {
+      console.log("Received message:", message);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from server");
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   return (
     <div className="flex h-screen bg-black text-white">
       {/* Conversation List */}
