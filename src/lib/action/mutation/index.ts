@@ -1,21 +1,13 @@
 "use server";
 
-import { OBJECT_TYPE_ERROR } from "@/configs/error";
 import { HttpStatusCode } from "@/constants/httpStatusCode.enum";
 import userApiRequest from "@/services/user.services";
 
 export async function emailSendForgotPassword({ body }: { body: any }) {
   try {
-    const response = await userApiRequest.forgotPasswordVerification({
+    return await userApiRequest.forgotPasswordVerification({
       body,
     });
-    console.log("🚀 ~ emailSendForgotPassword ~ response:", response);
-
-    if (!response) {
-      throw new Error(OBJECT_TYPE_ERROR.NO_RESPONSE);
-    }
-
-    return response;
   } catch (error) {
     return {
       code: HttpStatusCode.InternalServerError,
