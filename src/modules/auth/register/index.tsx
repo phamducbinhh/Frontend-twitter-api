@@ -259,13 +259,15 @@ export default function RegisterModule() {
             </form>
           </Form>
 
-          <Button
-            variant="link"
-            className="w-full text-blue-500 hover:text-blue-600"
-            disabled={isLoading}
-          >
-            Forgot password?
-          </Button>
+          <Link href={"/forgot-password"}>
+            <Button
+              variant="link"
+              className="w-full text-blue-500 hover:text-blue-600"
+              disabled={isLoading}
+            >
+              Forgot password?
+            </Button>
+          </Link>
 
           <p className="text-zinc-400 text-center">
             Don&apos;t have an account?{" "}

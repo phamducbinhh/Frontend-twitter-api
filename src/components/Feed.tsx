@@ -1,4 +1,4 @@
-import { getNewsFeedTweet } from "@/lib/action/tweet.action";
+import tweetAction from "@/lib/action/tweet.action";
 import Post from "./Post";
 
 interface TweetResponse<T> {
@@ -10,7 +10,7 @@ interface TweetResponse<T> {
   };
 }
 async function getPostFeedTweet(): Promise<TweetResponse<any>> {
-  return (await getNewsFeedTweet({
+  return (await tweetAction.getActionNewsFeedTweet({
     limit: 10,
   })) as TweetResponse<any>;
 }

@@ -26,6 +26,16 @@ class UserApiRequest {
       config: { method: METHOD_TYPE.POST, body },
     });
   }
+  public forgotPasswordVerification({
+    body,
+  }: {
+    body: { email: string };
+  }): Promise<any> {
+    return apiBaseServiceInstance.Http({
+      path: APP_API_ENDPOINT.USER.FORGOT_PASSWORD,
+      config: { method: METHOD_TYPE.POST, body },
+    });
+  }
 }
 
 const userApiRequest = new UserApiRequest();

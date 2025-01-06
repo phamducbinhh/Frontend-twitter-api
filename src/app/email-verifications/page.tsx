@@ -1,10 +1,10 @@
-import { emailVerification } from "@/lib/action/user.action";
+import userAction from "@/lib/action/user.action";
 import EmailVerification from "@/modules/verify/EmailVerification";
 
 type SearchParams = { [key: string]: string | string[] | undefined };
 
 async function fetchVerifyEmail<T>(body: any): Promise<T | null> {
-  return (await emailVerification({ body })) as Promise<T>;
+  return (await userAction.emailSendVerification({ body })) as Promise<T>;
 }
 
 export default async function EmailVerifications(props: {
