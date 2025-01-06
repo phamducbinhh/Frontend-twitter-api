@@ -8,7 +8,11 @@ const privatePaths = ["/dashboard", "/profile", "/"];
 const authPaths = ["/login", "/register"];
 
 // Đường dẫn công khai cho tất cả người dùng
-const publicPaths = ["/email-verifications", "/forgot-password"];
+const publicPaths = [
+  "/email-verifications",
+  "/forgot-password",
+  "/reset-password",
+];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl; // Lấy đường dẫn hiện tại
