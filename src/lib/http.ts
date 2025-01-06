@@ -118,7 +118,7 @@ export class ApiClient {
 
       if (
         [
-          "auth/login",
+          // "auth/login",
           "auth/register",
           "auth/login/google",
           "auth/logout",

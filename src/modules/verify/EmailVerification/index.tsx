@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
+import Link from "next/link";
 
 interface EmailVerificationProps {
   token: string | null;
@@ -57,9 +58,11 @@ export default function EmailVerification({ status }: EmailVerificationProps) {
           )}
         </CardContent>
         <CardFooter className="flex justify-center pb-6">
-          <Button variant={status === "error" ? "destructive" : "default"}>
-            {status === "success" ? "Go to Dashboard" : "Back to Home"}
-          </Button>
+          <Link href={status === "success" ? "/" : "/"}>
+            <Button variant={status === "error" ? "destructive" : "default"}>
+              {status === "success" ? "Go to Dashboard" : "Back to Home"}
+            </Button>
+          </Link>
         </CardFooter>
       </Card>
     </div>
