@@ -22,12 +22,6 @@ export default function MessengerModule() {
       lastMessage: "Did you see the latest tweet?",
       time: "1h",
     },
-    {
-      id: 3,
-      name: "Bob Johnson",
-      lastMessage: "Let's catch up soon!",
-      time: "2h",
-    },
   ];
 
   const messages = [

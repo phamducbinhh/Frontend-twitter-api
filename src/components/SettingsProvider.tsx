@@ -1,5 +1,4 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 import React from "react";
 
@@ -25,7 +24,7 @@ export default function SettingsProvider({
         options={{ showSpinner: false }}
         shallowRouting
       />
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} position={"left"} /> */}
     </QueryClientProvider>
   );
 }
