@@ -11,6 +11,7 @@ export const APP_API_ENDPOINT = Object.freeze({
       `/api/v1/tweet?limit=${limit}`,
   },
   USER: {
+    VERIFY_EMAIL: "/api/v1/user/verify-email",
     GET_PROFILE: ({ name }: { name: string }) => `/api/v1/user/${name}`,
   },
 });

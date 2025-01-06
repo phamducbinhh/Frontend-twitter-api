@@ -15,6 +15,17 @@ class UserApiRequest {
       config: { method: METHOD_TYPE.GET, token },
     });
   }
+
+  public emailVerification({
+    body,
+  }: {
+    body: { email_verify_token: string };
+  }): Promise<any> {
+    return apiBaseServiceInstance.Http({
+      path: APP_API_ENDPOINT.USER.VERIFY_EMAIL,
+      config: { method: METHOD_TYPE.POST, body },
+    });
+  }
 }
 
 const userApiRequest = new UserApiRequest();

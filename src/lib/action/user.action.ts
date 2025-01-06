@@ -25,3 +25,22 @@ export async function getUserProfile({ name }: { name: string }) {
     };
   }
 }
+
+export async function emailVerification({ body }: { body: any }) {
+  try {
+    const response = await userApiRequest.emailVerification({ body });
+
+    if (!response) {
+      throw new Error(OBJECT_TYPE_ERROR.NO_RESPONSE);
+    }
+
+    return response;
+  } catch (error) {
+    return {
+      code: HttpStatusCode.InternalServerError,
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+      data: null,
+    };
+  }
+}
