@@ -49,7 +49,8 @@ export default function MessengerModule({
       socket.off("receive_message", handleMessage);
       socket.disconnect();
     };
-  }, [id, handleMessage]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Cập nhật tin nhắn từ API khi conversation thay đổi
   useEffect(() => {
