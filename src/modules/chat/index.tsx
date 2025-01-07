@@ -15,12 +15,6 @@ export default function MessengerModule() {
       lastMessage: "Hey, how's it going?",
       time: "2m",
     },
-    {
-      id: 2,
-      name: "Jane Smith",
-      lastMessage: "Did you see the latest tweet?",
-      time: "1h",
-    },
   ];
 
   const { data: account } = useVerifiedUserValidator();
@@ -32,7 +26,9 @@ export default function MessengerModule() {
     socket.auth = { id };
     socket.connect();
 
-    const handleMessage = (data: any) => setMessages((prev) => [...prev, data]);
+    const handleMessage = (data: any) => {
+      setMessages((prev) => [...prev, { ...data, sender: "Other" }]);
+    };
 
     socket.on("receive private message", handleMessage);
 
@@ -45,6 +41,14 @@ export default function MessengerModule() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!value.trim()) return;
+
+    // Gửi tin nhắn qua socket
+    const message = {
+      content: value,
+      sender: "You",
+    };
+    setMessages((prev) => [...prev, message]);
+
     socket.emit("private message", { content: value, to: 29 });
     setValue("");
   };

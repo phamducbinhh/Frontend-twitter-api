@@ -21,11 +21,13 @@ export function MessageList({ messages }: MessageListProps) {
           }`}
         >
           <div
-            className={`max-w-xs md:max-w-md ${
-              item.sender === "You" ? "bg-blue-600" : "bg-zinc-800"
-            } rounded-lg p-3`}
+            className={`max-w-xs md:max-w-md p-3 rounded-lg ${
+              item.sender === "You"
+                ? "bg-blue-600 text-white"
+                : "bg-zinc-800 text-zinc-200"
+            } shadow-md`}
           >
-            <p>{item.content}</p>
+            <p className="text-sm">{item.content}</p>
             <span className="text-xs mt-1 block text-zinc-400">
               {item.time}
             </span>
