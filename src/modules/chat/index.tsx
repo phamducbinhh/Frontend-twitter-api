@@ -86,6 +86,7 @@ export default function MessengerModule() {
     socket.emit("private message", {
       content: trimmedValue,
       to: profiles.data.id,
+      from: id,
     });
     setValue("");
   };
