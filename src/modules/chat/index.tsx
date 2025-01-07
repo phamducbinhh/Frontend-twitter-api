@@ -52,23 +52,21 @@ export default function MessengerModule() {
     [setName, setReceiverId]
   );
 
+  // Hàm xử lý khi nhận tin nhắn từ server.
+  const handleMessage = (data: any) => {
+    const { payload } = data;
+    setMessages((prev) => [...prev, payload]);
+  };
+
   useEffect(() => {
-    // Reset messages when the profile changes (new user selected)
     setMessages([]);
     // Cấu hình thông tin xác thực cho socket, gửi id người dùng.
     socket.auth = { id };
     socket.connect();
 
-    // Hàm xử lý khi nhận tin nhắn từ server.
-    const handleMessage = (data: any) => {
-      const { payload } = data;
-      setMessages((prev) => [...prev, payload]);
-    };
-
-    // Lắng nghe sự kiện 'receive send_message' từ server, gọi `handleMessage` khi nhận tin nhắn.
+    // Lắng nghe sự kiện 'receive_message' từ server, gọi `handleMessage` khi nhận tin nhắn.
     socket.on("receive_message", handleMessage);
 
-    // Cleanup: khi component unmount hoặc `id` thay đổi, hủy đăng ký sự kiện và ngắt kết nối socket.
     return () => {
       socket.off("receive_message", handleMessage);
       socket.disconnect();
@@ -88,14 +86,11 @@ export default function MessengerModule() {
 
     if (!trimmedValue || !profiles?.data?.id) return;
 
-    // Tạo đối tượng tin nhắn với nội dung và người gửi là "You".
-
     const conversation = {
       content: value,
       sender_id: id,
       receiver_id: profiles.data.id,
     };
-    // Cập nhật danh sách tin nhắn với tin nhắn vừa gửi.
     setMessages((prev) => [...prev, conversation]);
 
     // Gửi tin nhắn qua socket đến server với dữ liệu bao gồm nội dung và người nhận (profile).
