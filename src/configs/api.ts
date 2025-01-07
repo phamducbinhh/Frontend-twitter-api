@@ -16,4 +16,8 @@ export const APP_API_ENDPOINT = Object.freeze({
     RESET_PASSWORD: "/api/v1/user/reset-password",
     GET_PROFILE: ({ name }: { name: string }) => `/api/v1/user/${name}`,
   },
+  CONVERSATION: {
+    GET_CONVERSATION: ({ receiver_id }: { receiver_id: string }) =>
+      `/api/v1/conversations/receivers/${receiver_id}`,
+  },
 });

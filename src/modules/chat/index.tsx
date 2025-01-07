@@ -1,6 +1,6 @@
 "use client";
 import { useVerifiedUserValidator } from "@/queries/useAuth";
-import { useQueryProfiles } from "@/queries/useUsers";
+import { useQueryConversation, useQueryProfiles } from "@/queries/useUsers";
 import socket from "@/utils/socket";
 import { useCallback, useEffect, useState } from "react";
 import { ChatHeader } from "./ChatHeader";
@@ -9,7 +9,7 @@ import { MessageInput } from "./MessageInput";
 import { MessageList } from "./MessageList";
 
 export default function MessengerModule() {
-  const conversations = [
+  const user = [
     {
       id: 1,
       name: "phamducbinh",
@@ -17,7 +17,7 @@ export default function MessengerModule() {
       time: "2m",
     },
     {
-      id: 2,
+      id: 29,
       name: "binhboong171",
       lastMessage: "Hey, how's it going?",
       time: "2m",
@@ -29,17 +29,28 @@ export default function MessengerModule() {
   const [value, setValue] = useState("");
   const [messages, setMessages] = useState<any[]>([]);
   const [name, setName] = useState("");
+  const [receiverId, setReceiverId] = useState<number | any>(null);
 
   const { data: profiles } = useQueryProfiles(
     { name },
     { enabled: Boolean(name) }
   );
 
-  const getProfile = useCallback((name: string) => {
-    if (name.trim()) {
-      setName(name);
-    }
-  }, []);
+  // Lấy dữ liệu tin nhắn từ API khi receiverId thay đổi
+  const { data: conversation } = useQueryConversation(
+    { receiver_id: receiverId },
+    { enabled: Boolean(receiverId) }
+  );
+
+  const getProfile = useCallback(
+    (item: any) => {
+      if (item?.name?.trim()) {
+        setName(item?.name);
+        setReceiverId(item?.id);
+      }
+    },
+    [setName, setReceiverId]
+  );
 
   useEffect(() => {
     // Reset messages when the profile changes (new user selected)
@@ -50,22 +61,26 @@ export default function MessengerModule() {
 
     // Hàm xử lý khi nhận tin nhắn từ server.
     const handleMessage = (data: any) => {
-      // Kiểm tra nếu người gửi là chính mình (so sánh với `id`), gán "You" nếu đúng, ngược lại là "Other".
-      setMessages((prev) => [
-        ...prev,
-        { ...data, sender: data.sender === id ? "You" : "Other" },
-      ]);
+      const { payload } = data;
+      setMessages((prev) => [...prev, payload]);
     };
 
-    // Lắng nghe sự kiện 'receive private message' từ server, gọi `handleMessage` khi nhận tin nhắn.
-    socket.on("receive private message", handleMessage);
+    // Lắng nghe sự kiện 'receive send_message' từ server, gọi `handleMessage` khi nhận tin nhắn.
+    socket.on("receive_message", handleMessage);
 
     // Cleanup: khi component unmount hoặc `id` thay đổi, hủy đăng ký sự kiện và ngắt kết nối socket.
     return () => {
-      socket.off("receive private message", handleMessage);
+      socket.off("receive_message", handleMessage);
       socket.disconnect();
     };
   }, [id, name]);
+
+  // Cập nhật messages với tin nhắn từ API khi conversation thay đổi
+  useEffect(() => {
+    if (conversation?.data) {
+      setMessages((prev) => [...prev, ...conversation?.data.conversations]);
+    }
+  }, [conversation]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -74,25 +89,24 @@ export default function MessengerModule() {
     if (!trimmedValue || !profiles?.data?.id) return;
 
     // Tạo đối tượng tin nhắn với nội dung và người gửi là "You".
-    const message = {
-      content: trimmedValue,
-      sender: "You",
-    };
 
+    const conversation = {
+      content: value,
+      sender_id: id,
+      receiver_id: profiles.data.id,
+    };
     // Cập nhật danh sách tin nhắn với tin nhắn vừa gửi.
-    setMessages((prev) => [...prev, message]);
+    setMessages((prev) => [...prev, conversation]);
 
     // Gửi tin nhắn qua socket đến server với dữ liệu bao gồm nội dung và người nhận (profile).
-    socket.emit("private message", {
-      content: trimmedValue,
-      to: profiles.data.id,
-      from: id,
+    socket.emit("send_message", {
+      payload: conversation,
     });
     setValue("");
   };
   return (
     <div className="flex h-screen bg-black text-white">
-      <ConversationList conversations={conversations} getProfile={getProfile} />
+      <ConversationList user={user} getProfile={getProfile} />
       <div className="flex-1 flex flex-col">
         {!profiles ? (
           <div className="flex items-center justify-center flex-1">
@@ -103,7 +117,7 @@ export default function MessengerModule() {
         ) : (
           <>
             <ChatHeader profiles={profiles} />
-            <MessageList messages={messages} />
+            <MessageList messages={messages} user_id={id} />
             <MessageInput
               value={value}
               onChange={(e) => setValue(e.target.value)}

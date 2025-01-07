@@ -52,6 +52,17 @@ class UserApiRequest {
       config: { method: METHOD_TYPE.POST, body },
     });
   }
+
+  public getConversation({
+    receiver_id,
+  }: {
+    receiver_id: string;
+  }): Promise<any> {
+    return apiBaseServiceInstance.Http({
+      path: APP_API_ENDPOINT.CONVERSATION.GET_CONVERSATION({ receiver_id }),
+      config: { method: METHOD_TYPE.GET },
+    });
+  }
 }
 
 const userApiRequest = new UserApiRequest();
