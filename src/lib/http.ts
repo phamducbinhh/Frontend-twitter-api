@@ -98,7 +98,6 @@ export class ApiClient {
       credentials: "include",
       body:
         method !== METHOD_TYPE.GET && body ? JSON.stringify(body) : undefined,
-      next: { revalidate: 60 },
       ...restConfig,
     };
 
