@@ -48,6 +48,7 @@ export default function MessengerModule({
     return () => {
       socket.off("receive_message", handleMessage);
       socket.disconnect();
+      setMessages([]);
     };
   }, [user_id, handleMessage, verify_status]);
 
