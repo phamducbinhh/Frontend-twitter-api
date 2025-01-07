@@ -16,7 +16,7 @@ export default function MessengerModule({
   receiver_id: string | any;
 }) {
   const { data: account } = useVerifiedUserValidator();
-  const { id: user_id } = account?.data || {};
+  const { id } = account?.data || {};
   const [messages, setMessages] = useState<any[]>([]);
   const [value, setValue] = useState("");
 
@@ -39,9 +39,9 @@ export default function MessengerModule({
 
   // Thiết lập socket và lắng nghe sự kiện nhận tin nhắn
   useEffect(() => {
-    if (!user_id) return;
+    if (!id) return;
 
-    socket.auth = { user_id };
+    socket.auth = { id };
     socket.connect();
     socket.on("receive_message", handleMessage);
 
@@ -49,7 +49,7 @@ export default function MessengerModule({
       socket.off("receive_message", handleMessage);
       socket.disconnect();
     };
-  }, [user_id, handleMessage]);
+  }, [id, handleMessage]);
 
   // Cập nhật tin nhắn từ API khi conversation thay đổi
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function MessengerModule({
 
     const newMessage = {
       content: trimmedValue,
-      sender_id: user_id,
+      sender_id: id,
       receiver_id: profiles.data.id,
     };
 
@@ -82,7 +82,7 @@ export default function MessengerModule({
   return (
     <>
       <ChatHeader profiles={profiles} />
-      <MessageList messages={messages} user_id={user_id} />
+      <MessageList messages={messages} user_id={id} />
       <MessageInput
         value={value}
         onChange={(e) => setValue(e.target.value)}
