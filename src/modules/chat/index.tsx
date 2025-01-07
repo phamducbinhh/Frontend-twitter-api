@@ -16,7 +16,7 @@ export default function MessengerModule({
   receiver_id: string | any;
 }) {
   const { data: account } = useVerifiedUserValidator();
-  const { id: user_id } = account?.data || {};
+  const { id: user_id, verify_status } = account?.data || {};
   const [messages, setMessages] = useState<any[]>([]);
   const [value, setValue] = useState("");
 
@@ -41,7 +41,7 @@ export default function MessengerModule({
   useEffect(() => {
     if (!user_id) return;
 
-    socket.auth = { user_id };
+    socket.auth = { user_id, verify_status };
     socket.connect();
     socket.on("receive_message", handleMessage);
 
@@ -49,7 +49,7 @@ export default function MessengerModule({
       socket.off("receive_message", handleMessage);
       socket.disconnect();
     };
-  }, [user_id, handleMessage]);
+  }, [user_id, handleMessage, verify_status]);
 
   // Cập nhật tin nhắn từ API khi conversation thay đổi
   useEffect(() => {
