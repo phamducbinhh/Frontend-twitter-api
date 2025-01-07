@@ -1,3 +1,4 @@
+import LeftBar from "@/components/LeftBar";
 import userAction from "@/lib/action/user.action";
 import { ConversationList } from "@/modules/chat/ConversationList";
 
@@ -13,7 +14,10 @@ export default async function ChatLayout({
   const listReceiver = await fetchListReceiver();
 
   return (
-    <div className="flex h-screen bg-black text-white">
+    <div className="max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl xxl:max-w-screen-xxl mx-auto flex justify-between">
+      <div className="px-2 xsm:px-4 xxl:px-8 ">
+        <LeftBar />
+      </div>
       {/* Conversation List */}
       <ConversationList listReceiver={listReceiver} />
       {/* Chat Area */}
