@@ -42,63 +42,63 @@ export default function MessengerModule() {
     { enabled: Boolean(receiverId) }
   );
 
-  const getProfile = useCallback(
-    (item: any) => {
-      if (item?.name?.trim()) {
-        setName(item?.name);
-        setReceiverId(item?.id);
-      }
-    },
-    [setName, setReceiverId]
-  );
+  // Lấy profile và receiverId khi chọn người nhận
+  const getProfile = useCallback((item: any) => {
+    if (item?.name?.trim()) {
+      setName(item?.name);
+      setReceiverId(item?.id);
+    }
+  }, []);
 
-  // Hàm xử lý khi nhận tin nhắn từ server.
-  const handleMessage = (data: any) => {
+  // Cập nhật tin nhắn khi nhận được tin nhắn mới từ server
+  const handleMessage = useCallback((data: any) => {
     const { payload } = data;
     setMessages((prev) => [...prev, payload]);
-  };
+  }, []);
 
+  // Thiết lập socket và lắng nghe sự kiện nhận tin nhắn
   useEffect(() => {
-    setMessages([]);
-    // Cấu hình thông tin xác thực cho socket, gửi id người dùng.
+    if (!id) return;
+
     socket.auth = { id };
     socket.connect();
-
-    // Lắng nghe sự kiện 'receive_message' từ server, gọi `handleMessage` khi nhận tin nhắn.
     socket.on("receive_message", handleMessage);
 
     return () => {
       socket.off("receive_message", handleMessage);
       socket.disconnect();
     };
-  }, [id, name]);
+  }, [id, handleMessage]);
 
-  // Cập nhật messages với tin nhắn từ API khi conversation thay đổi
+  // Cập nhật tin nhắn từ API khi conversation thay đổi
   useEffect(() => {
     if (conversation?.data) {
       setMessages((prev) => [...prev, ...conversation?.data.conversations]);
     }
   }, [conversation]);
 
+  // Xử lý gửi tin nhắn
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const trimmedValue = value.trim();
 
+    // Kiểm tra điều kiện gửi tin nhắn
     if (!trimmedValue || !profiles?.data?.id) return;
 
-    const conversation = {
-      content: value,
+    const newMessage = {
+      content: trimmedValue,
       sender_id: id,
       receiver_id: profiles.data.id,
     };
-    setMessages((prev) => [...prev, conversation]);
 
-    // Gửi tin nhắn qua socket đến server với dữ liệu bao gồm nội dung và người nhận (profile).
-    socket.emit("send_message", {
-      payload: conversation,
-    });
-    setValue("");
+    // Cập nhật tin nhắn vào state
+    setMessages((prev) => [...prev, newMessage]);
+
+    // Gửi tin nhắn qua socket
+    socket.emit("send_message", { payload: newMessage });
+    setValue(""); // Reset input sau khi gửi
   };
+
   return (
     <div className="flex h-screen bg-black text-white">
       <ConversationList user={user} getProfile={getProfile} />
