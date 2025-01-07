@@ -42,6 +42,8 @@ export default function MessengerModule() {
   }, []);
 
   useEffect(() => {
+    // Reset messages when the profile changes (new user selected)
+    setMessages([]);
     // Cấu hình thông tin xác thực cho socket, gửi id người dùng.
     socket.auth = { id };
     socket.connect();
@@ -63,7 +65,7 @@ export default function MessengerModule() {
       socket.off("receive private message", handleMessage);
       socket.disconnect();
     };
-  }, [id]);
+  }, [id, name]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
