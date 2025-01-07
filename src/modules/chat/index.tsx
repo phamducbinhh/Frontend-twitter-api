@@ -81,13 +81,23 @@ export default function MessengerModule() {
     <div className="flex h-screen bg-black text-white">
       <ConversationList conversations={conversations} getProfile={getProfile} />
       <div className="flex-1 flex flex-col">
-        <ChatHeader />
-        <MessageList messages={messages} />
-        <MessageInput
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onSubmit={handleSubmit}
-        />
+        {!profiles ? (
+          <div className="flex items-center justify-center flex-1">
+            <p className="text-zinc-400">
+              Chọn một cuộc trò chuyện để bắt đầu nhắn tin
+            </p>
+          </div>
+        ) : (
+          <>
+            <ChatHeader profiles={profiles} />
+            <MessageList messages={messages} />
+            <MessageInput
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              onSubmit={handleSubmit}
+            />
+          </>
+        )}
       </div>
     </div>
   );
