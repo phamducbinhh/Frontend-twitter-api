@@ -1,7 +1,8 @@
 "use client";
 import { useVerifiedUserValidator } from "@/queries/useAuth";
+import { useQueryProfiles } from "@/queries/useUsers";
 import socket from "@/utils/socket";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ChatHeader } from "./ChatHeader";
 import { ConversationList } from "./ConversationList";
 import { MessageInput } from "./MessageInput";
@@ -11,7 +12,13 @@ export default function MessengerModule() {
   const conversations = [
     {
       id: 1,
-      name: "John Doe",
+      name: "phamducbinh",
+      lastMessage: "Hey, how's it going?",
+      time: "2m",
+    },
+    {
+      id: 2,
+      name: "binhboong171",
       lastMessage: "Hey, how's it going?",
       time: "2m",
     },
@@ -21,6 +28,18 @@ export default function MessengerModule() {
   const { id } = account?.data || {};
   const [value, setValue] = useState("");
   const [messages, setMessages] = useState<any[]>([]);
+  const [name, setName] = useState("");
+
+  const { data: profiles } = useQueryProfiles(
+    { name },
+    { enabled: Boolean(name) }
+  );
+
+  const getProfile = useCallback((name: string) => {
+    if (name.trim()) {
+      setName(name);
+    }
+  }, []);
 
   useEffect(() => {
     socket.auth = { id };
@@ -40,22 +59,27 @@ export default function MessengerModule() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!value.trim()) return;
+    const trimmedValue = value.trim();
 
-    // Gửi tin nhắn qua socket
+    if (!trimmedValue || !profiles?.data?.id) return;
+
     const message = {
-      content: value,
+      content: trimmedValue,
       sender: "You",
     };
+
     setMessages((prev) => [...prev, message]);
 
-    socket.emit("private message", { content: value, to: 29 });
+    // Gửi tin nhắn qua socket
+    socket.emit("private message", {
+      content: trimmedValue,
+      to: profiles.data.id,
+    });
     setValue("");
   };
-
   return (
     <div className="flex h-screen bg-black text-white">
-      <ConversationList conversations={conversations} />
+      <ConversationList conversations={conversations} getProfile={getProfile} />
       <div className="flex-1 flex flex-col">
         <ChatHeader />
         <MessageList messages={messages} />

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -10,9 +11,13 @@ interface Conversation {
 
 interface ConversationListProps {
   conversations: Conversation[];
+  getProfile: (name: string) => void;
 }
 
-export function ConversationList({ conversations }: ConversationListProps) {
+export function ConversationList({
+  conversations,
+  getProfile,
+}: ConversationListProps) {
   return (
     <div className="w-1/3 border-r border-zinc-800 hidden md:block">
       <div className="p-4 border-b border-zinc-800">
@@ -22,6 +27,7 @@ export function ConversationList({ conversations }: ConversationListProps) {
         {conversations.map((conversation) => (
           <div
             key={conversation.id}
+            onClick={() => getProfile(conversation.name)}
             className="flex items-center p-4 border-b border-zinc-800 hover:bg-zinc-900 cursor-pointer"
           >
             <Avatar className="h-10 w-10">

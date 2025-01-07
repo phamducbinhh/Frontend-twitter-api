@@ -8,7 +8,7 @@ class UserApiRequest {
     token,
   }: {
     name: string;
-    token: string;
+    token?: string;
   }): Promise<any> {
     return apiBaseServiceInstance.Http({
       path: APP_API_ENDPOINT.USER.GET_PROFILE({ name }),
