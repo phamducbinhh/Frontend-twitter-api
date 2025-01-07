@@ -63,6 +63,12 @@ class UserApiRequest {
       config: { method: METHOD_TYPE.GET },
     });
   }
+  public getReceiverList({ token }: { token: string }): Promise<any> {
+    return apiBaseServiceInstance.Http({
+      path: APP_API_ENDPOINT.CONVERSATION.GET_LIST_RECEIVER,
+      config: { method: METHOD_TYPE.GET, token },
+    });
+  }
 }
 
 const userApiRequest = new UserApiRequest();

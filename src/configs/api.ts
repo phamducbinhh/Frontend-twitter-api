@@ -19,5 +19,6 @@ export const APP_API_ENDPOINT = Object.freeze({
   CONVERSATION: {
     GET_CONVERSATION: ({ receiver_id }: { receiver_id: string }) =>
       `/api/v1/conversations/receivers/${receiver_id}`,
+    GET_LIST_RECEIVER: "/api/v1/conversations",
   },
 });

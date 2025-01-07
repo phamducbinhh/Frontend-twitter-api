@@ -45,6 +45,26 @@ class UserAction {
       };
     }
   }
+
+  async getReceiverList() {
+    const token = (await getTokenCookies()) as string;
+    try {
+      const response = await userApiRequest.getReceiverList({ token });
+
+      if (!response) {
+        throw new Error(OBJECT_TYPE_ERROR.NO_RESPONSE);
+      }
+
+      return response.data;
+    } catch (error) {
+      return {
+        code: HttpStatusCode.InternalServerError,
+        message:
+          error instanceof Error ? error.message : "An unknown error occurred",
+        data: null,
+      };
+    }
+  }
 }
 
 const userAction = new UserAction();
