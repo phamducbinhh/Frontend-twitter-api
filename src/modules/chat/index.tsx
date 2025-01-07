@@ -71,6 +71,7 @@ export default function MessengerModule({
       content: trimmedValue,
       sender_id: user_id,
       receiver_id: profiles.data.id,
+      createdAt: new Date().toISOString(),
     };
 
     // Cập nhật tin nhắn vào state

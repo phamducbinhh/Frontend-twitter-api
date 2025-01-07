@@ -1,9 +1,10 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { formatTime } from "@/helpers";
 
 interface Message {
   sender_id: number;
   content: string;
-  time: string;
+  createdAt: string;
 }
 
 interface MessageListProps {
@@ -29,9 +30,11 @@ export function MessageList({ messages, user_id }: MessageListProps) {
             } shadow-md`}
           >
             <p className="text-sm">{item.content}</p>
-            <span className="text-xs mt-1 block text-zinc-400">
-              {item.time}
-            </span>
+            {item.sender_id !== user_id && (
+              <span className="text-xs mt-1 block text-zinc-400">
+                {formatTime(item.createdAt)}
+              </span>
+            )}
           </div>
         </div>
       ))}
