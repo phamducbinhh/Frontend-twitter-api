@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import Link from "next/link";
 
 interface Conversation {
   id: number;
@@ -11,10 +12,9 @@ interface Conversation {
 
 interface ConversationListProps {
   user: Conversation[];
-  getProfile: (item: any) => void;
 }
 
-export function ConversationList({ user, getProfile }: ConversationListProps) {
+export function ConversationList({ user }: ConversationListProps) {
   return (
     <div className="w-1/3 border-r border-zinc-800 hidden md:block">
       <div className="p-4 border-b border-zinc-800">
@@ -22,9 +22,12 @@ export function ConversationList({ user, getProfile }: ConversationListProps) {
       </div>
       <ScrollArea className="h-[calc(100vh-60px)]">
         {user.map((item) => (
-          <div
+          <Link
+            href={{
+              pathname: `/messenger/${item.name}`,
+              query: { receiver_id: item.id },
+            }}
             key={item.id}
-            onClick={() => getProfile(item)}
             className="flex items-center p-4 border-b border-zinc-800 hover:bg-zinc-900 cursor-pointer"
           >
             <Avatar className="h-10 w-10">
@@ -42,7 +45,7 @@ export function ConversationList({ user, getProfile }: ConversationListProps) {
                 {item.lastMessage}
               </p>
             </div>
-          </div>
+          </Link>
         ))}
       </ScrollArea>
     </div>

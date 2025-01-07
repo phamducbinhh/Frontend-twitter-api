@@ -1,54 +1,35 @@
 "use client";
+
 import { useVerifiedUserValidator } from "@/queries/useAuth";
 import { useQueryConversation, useQueryProfiles } from "@/queries/useUsers";
 import socket from "@/utils/socket";
 import { useCallback, useEffect, useState } from "react";
 import { ChatHeader } from "./ChatHeader";
-import { ConversationList } from "./ConversationList";
 import { MessageInput } from "./MessageInput";
 import { MessageList } from "./MessageList";
 
-export default function MessengerModule() {
-  const user = [
-    {
-      id: 1,
-      name: "phamducbinh",
-      lastMessage: "Hey, how's it going?",
-      time: "2m",
-    },
-    {
-      id: 29,
-      name: "binhboong171",
-      lastMessage: "Hey, how's it going?",
-      time: "2m",
-    },
-  ];
-
+export default function MessengerModule({
+  slug,
+  receiver_id,
+}: {
+  slug: string;
+  receiver_id: string | any;
+}) {
   const { data: account } = useVerifiedUserValidator();
-  const { id } = account?.data || {};
-  const [value, setValue] = useState("");
+  const { id: user_id } = account?.data || {};
   const [messages, setMessages] = useState<any[]>([]);
-  const [name, setName] = useState("");
-  const [receiverId, setReceiverId] = useState<number | any>(null);
+  const [value, setValue] = useState("");
 
   const { data: profiles } = useQueryProfiles(
-    { name },
-    { enabled: Boolean(name) }
+    { name: slug },
+    { enabled: Boolean(slug) }
   );
 
   // Lấy dữ liệu tin nhắn từ API khi receiverId thay đổi
   const { data: conversation } = useQueryConversation(
-    { receiver_id: receiverId },
-    { enabled: Boolean(receiverId) }
+    { receiver_id },
+    { enabled: Boolean(receiver_id) }
   );
-
-  // Lấy profile và receiverId khi chọn người nhận
-  const getProfile = useCallback((item: any) => {
-    if (item?.name?.trim()) {
-      setName(item?.name);
-      setReceiverId(item?.id);
-    }
-  }, []);
 
   // Cập nhật tin nhắn khi nhận được tin nhắn mới từ server
   const handleMessage = useCallback((data: any) => {
@@ -58,9 +39,9 @@ export default function MessengerModule() {
 
   // Thiết lập socket và lắng nghe sự kiện nhận tin nhắn
   useEffect(() => {
-    if (!id) return;
+    if (!user_id) return;
 
-    socket.auth = { id };
+    socket.auth = { user_id };
     socket.connect();
     socket.on("receive_message", handleMessage);
 
@@ -68,7 +49,7 @@ export default function MessengerModule() {
       socket.off("receive_message", handleMessage);
       socket.disconnect();
     };
-  }, [id, handleMessage]);
+  }, [user_id, handleMessage]);
 
   // Cập nhật tin nhắn từ API khi conversation thay đổi
   useEffect(() => {
@@ -87,7 +68,7 @@ export default function MessengerModule() {
 
     const newMessage = {
       content: trimmedValue,
-      sender_id: id,
+      sender_id: user_id,
       receiver_id: profiles.data.id,
     };
 
@@ -98,29 +79,15 @@ export default function MessengerModule() {
     socket.emit("send_message", { payload: newMessage });
     setValue(""); // Reset input sau khi gửi
   };
-
   return (
-    <div className="flex h-screen bg-black text-white">
-      <ConversationList user={user} getProfile={getProfile} />
-      <div className="flex-1 flex flex-col">
-        {!profiles ? (
-          <div className="flex items-center justify-center flex-1">
-            <p className="text-zinc-400">
-              Chọn một cuộc trò chuyện để bắt đầu nhắn tin
-            </p>
-          </div>
-        ) : (
-          <>
-            <ChatHeader profiles={profiles} />
-            <MessageList messages={messages} user_id={id} />
-            <MessageInput
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              onSubmit={handleSubmit}
-            />
-          </>
-        )}
-      </div>
-    </div>
+    <>
+      <ChatHeader profiles={profiles} />
+      <MessageList messages={messages} user_id={user_id} />
+      <MessageInput
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onSubmit={handleSubmit}
+      />
+    </>
   );
 }
