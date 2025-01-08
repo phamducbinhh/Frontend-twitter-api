@@ -2,21 +2,35 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useVerifiedUserValidator } from "@/queries/useAuth";
 import { useQueryGetRecharts } from "@/queries/useUsers";
 import socket from "@/utils/socket";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export function ConversationList() {
   const pathname = usePathname();
   const { data: recentChats, isLoading, refetch } = useQueryGetRecharts();
+  const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
+  const { data: account } = useVerifiedUserValidator();
+  const { id: user_id } = account?.data || {};
 
   useEffect(() => {
     socket.on("update_recent_chats", () => {
       refetch();
     });
   }, [refetch]);
+
+  useEffect(() => {
+    socket.on("getOnlineUsers", (data) => {
+      setOnlineUsers(data.map(Number));
+    });
+  }, []);
+
+  const filterOnlineUsers = useMemo(() => {
+    return onlineUsers.filter((user) => user !== Number(user_id));
+  }, [onlineUsers, user_id]);
 
   return (
     <div className="w-64 xl:w-80 border-r border-zinc-800 hidden md:block border-l">
@@ -55,7 +69,9 @@ export function ConversationList() {
                       <AvatarImage src={item.avatar} />
                       <AvatarFallback>{item.name.slice(0, 2)}</AvatarFallback>
                     </Avatar>
-                    <span className="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-500 ring-2 ring-black"></span>
+                    {filterOnlineUsers.includes(item.id) && (
+                      <span className="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-500 ring-2 ring-black"></span>
+                    )}
                   </div>
 
                   <div className="ml-4 flex-1">
@@ -64,7 +80,7 @@ export function ConversationList() {
                       <span className="text-sm text-zinc-400">{"2m"}</span>
                     </div>
                     <p className="text-sm text-zinc-400 truncate">
-                      {"how are you?"}
+                      {item.lastContent}
                     </p>
                   </div>
                 </div>
