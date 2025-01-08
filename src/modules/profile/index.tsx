@@ -10,7 +10,7 @@ import Link from "next/link";
 export default function ProfileModule({ data }: any) {
   if (!data) return null;
   return (
-    <div>
+    <main>
       {/* PROFILE TITLE */}
       <div className="flex items-center gap-8 sticky top-0 backdrop-blur-md p-4 z-10 bg-[#00000084]">
         <Link href="/">
@@ -93,17 +93,27 @@ export default function ProfileModule({ data }: any) {
           <div className="flex gap-4">
             <div className="flex items-center gap-2">
               <span className="font-bold">{data.followers}</span>
-              <span className="text-textGray text-[15px]">Followers</span>
+              <Link
+                href={`${data.name}/followers`}
+                className="text-textGray text-[15px] hover:text-iconBlue"
+              >
+                Followers
+              </Link>
             </div>
             <div className="flex items-center gap-2">
               <span className="font-bold">{data.following}</span>
-              <span className="text-textGray text-[15px]">Followings</span>
+              <Link
+                href={`${data.name}/following`}
+                className="text-textGray text-[15px] hover:text-iconBlue"
+              >
+                Followings
+              </Link>
             </div>
           </div>
         </div>
       </div>
       {/* FEED */}
       <Feed />
-    </div>
+    </main>
   );
 }

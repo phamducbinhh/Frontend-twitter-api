@@ -7,6 +7,7 @@ import Link from "next/link";
 export default function FollowingPage() {
   return (
     <div className="dark min-h-screen">
+      {/* Main Content - Following List */}
       <main>
         {/* Header */}
         <div className="sticky top-0 bg-black/80 backdrop-blur-md z-10">
