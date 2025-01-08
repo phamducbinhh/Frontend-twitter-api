@@ -4,17 +4,19 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useVerifiedUserValidator } from "@/queries/useAuth";
 import { useQueryGetRecharts } from "@/queries/useUsers";
+import { useGlobalStore } from "@/stores/state";
 import socket from "@/utils/socket";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 
 export function ConversationList() {
   const pathname = usePathname();
   const { data: recentChats, isLoading, refetch } = useQueryGetRecharts();
-  const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
   const { data: account } = useVerifiedUserValidator();
   const { id: user_id } = account?.data || {};
+  const onlineUsers = useGlobalStore((state) => state.onlineUsers);
+  const setOnlineUsers = useGlobalStore((state) => state.setOnlineUsers);
 
   useEffect(() => {
     socket.on("update_recent_chats", () => {
@@ -26,7 +28,7 @@ export function ConversationList() {
     socket.on("getOnlineUsers", (data) => {
       setOnlineUsers(data.map(Number));
     });
-  }, []);
+  }, [setOnlineUsers]);
 
   const filterOnlineUsers = useMemo(() => {
     return onlineUsers.filter((user) => user !== Number(user_id));

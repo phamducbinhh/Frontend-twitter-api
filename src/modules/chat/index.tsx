@@ -83,7 +83,7 @@ export default function MessengerModule({
   };
   return (
     <>
-      <ChatHeader profiles={profiles} />
+      <ChatHeader profiles={profiles} receiver_id={receiver_id} />
       <MessageList messages={messages} user_id={user_id} />
       <MessageInput
         value={value}
