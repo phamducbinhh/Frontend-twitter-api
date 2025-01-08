@@ -24,8 +24,8 @@ export function ChatHeader({
   return (
     <div className="bg-black p-4 border-b border-zinc-800 flex items-center justify-between">
       <div className="flex items-center">
-        <Link href="/" className="md:hidden">
-          <Button variant="ghost" size="icon" className="mr-2" type="button">
+        <Link href="/messenger">
+          <Button variant="ghost" size="icon" className="mr-2">
             <ArrowLeft className="h-6 w-6" />
           </Button>
         </Link>

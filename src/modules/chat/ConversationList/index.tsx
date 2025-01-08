@@ -2,6 +2,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
+import { formatLastChangedTime } from "@/helpers";
 import { useVerifiedUserValidator } from "@/queries/useAuth";
 import { useQueryGetRecharts } from "@/queries/useUsers";
 import { useGlobalStore } from "@/stores/state";
@@ -79,11 +80,19 @@ export function ConversationList() {
                   <div className="ml-4 flex-1">
                     <div className="flex justify-between items-baseline">
                       <h3 className="font-semibold">{item.name}</h3>
-                      <span className="text-sm text-zinc-400">{"2m"}</span>
+                      <span className="text-sm text-zinc-400">
+                        {formatLastChangedTime(item.updatedAt)}
+                      </span>
                     </div>
-                    <p className="text-sm text-zinc-400 truncate">
-                      {item.lastContent}
-                    </p>
+
+                    <div className="flex justify-between items-center">
+                      <p className="text-sm text-zinc-400 truncate">
+                        {item.lastContent}
+                      </p>
+                      {/* <span className="bg-blue-600 text-white text-xs font-medium px-2 py-0.5 rounded-full">
+                        {"1"}
+                      </span> */}
+                    </div>
                   </div>
                 </div>
               </Link>
