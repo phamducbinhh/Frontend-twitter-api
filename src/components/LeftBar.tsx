@@ -16,33 +16,6 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-const menuList = [
-  {
-    id: 1,
-    name: "Homepage",
-    link: "/",
-    icon: "home.svg",
-  },
-  {
-    id: 2,
-    name: "Messages",
-    link: "/messenger",
-    icon: "message.svg",
-  },
-  {
-    id: 3,
-    name: "Bookmarks",
-    link: "/bookmarks",
-    icon: "bookmark.svg",
-  },
-  {
-    id: 4,
-    name: "Profile",
-    link: "/",
-    icon: "profile.svg",
-  },
-];
-
 const LeftBar = () => {
   const logoutMutation = useLogoutMutation();
 
@@ -51,6 +24,33 @@ const LeftBar = () => {
   const { name, username, avatar } = data?.data || {};
 
   const router = useRouter();
+
+  const menuList = [
+    {
+      id: 1,
+      name: "Homepage",
+      link: "/",
+      icon: "home.svg",
+    },
+    {
+      id: 2,
+      name: "Messages",
+      link: "/messenger",
+      icon: "message.svg",
+    },
+    {
+      id: 3,
+      name: "Bookmarks",
+      link: "/bookmarks",
+      icon: "bookmark.svg",
+    },
+    {
+      id: 4,
+      name: "Profile",
+      link: `/${name || username}`,
+      icon: "profile.svg",
+    },
+  ];
 
   const handleLogout = async () => {
     try {
