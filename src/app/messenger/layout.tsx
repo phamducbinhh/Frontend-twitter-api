@@ -14,7 +14,7 @@ export default async function ChatLayout({
   const listReceiver = await fetchListReceiver();
 
   return (
-    <div className="max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl xxl:max-w-screen-xxl mx-auto flex justify-between">
+    <div className="flex h-screen bg-black text-white">
       <div className="px-2 xsm:px-4 xxl:px-8 ">
         <LeftBar />
       </div>

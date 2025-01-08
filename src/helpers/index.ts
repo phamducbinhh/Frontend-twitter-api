@@ -72,11 +72,13 @@ export const formatDate = (dateString: string): string => {
 
 export const formatTime = (dateTime: string) => {
   if (!dateTime) return;
-  const date = new Date(dateTime?.replace(" ", "T"));
-  const hours = String(date.getHours()).padStart(2, "0");
+  const date = new Date(dateTime.replace(" ", "T"));
+  let hours = date.getHours();
   const minutes = String(date.getMinutes()).padStart(2, "0");
-
-  return `${hours}:${minutes}`;
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  return `${String(hours).padStart(2, "0")}:${minutes} ${ampm}`;
 };
 
 export const formatLastChangedTime = (date: string): string => {

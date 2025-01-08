@@ -23,7 +23,7 @@ export function MessageList({ messages, user_id }: MessageListProps) {
           }`}
         >
           <div
-            className={`max-w-xs md:max-w-md p-3 rounded-lg ${
+            className={`max-w-xs md:max-w-md px-4 py-2 rounded-2xl ${
               item.sender_id === user_id
                 ? "bg-blue-600 text-white"
                 : "bg-zinc-800 text-zinc-200"

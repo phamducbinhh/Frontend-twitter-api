@@ -16,7 +16,7 @@ interface ConversationListProps {
 
 export function ConversationList({ listReceiver }: ConversationListProps) {
   return (
-    <div className="w-1/3 border-r border-zinc-800 hidden md:block border-l">
+    <div className="w-1/6 border-r border-zinc-800 hidden md:block border-l">
       <div className="p-4 border-b border-zinc-800">
         <h2 className="text-xl font-semibold">Messages</h2>
       </div>
