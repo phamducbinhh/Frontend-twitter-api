@@ -25,7 +25,7 @@ export default function ChatLayout({
   }, [user_id, verify_status]);
 
   return (
-    <div className="flex h-screen bg-black text-white">
+    <div className="max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl xxl:max-w-screen-xxl mx-auto flex justify-between">
       <div className="px-2 xsm:px-4 xxl:px-8 ">
         <LeftBar />
       </div>
