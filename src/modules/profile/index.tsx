@@ -2,7 +2,9 @@ import CustomImage from "@/components/CustomImage";
 import Feed from "@/components/Feed";
 import Image from "@/components/Image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserVerifyStatus } from "@/constants/enums";
 import { formatDateString } from "@/helpers";
+import { CheckCircle } from "lucide-react";
 import Link from "next/link";
 
 export default function ProfileModule({ data }: any) {
@@ -61,9 +63,14 @@ export default function ProfileModule({ data }: any) {
         {/* USER DETAILS */}
         <div className="p-4 flex flex-col gap-2">
           {/* USERNAME & HANDLE */}
-          <div className="">
+          <div>
             <h1 className="text-2xl font-bold">{data.name}</h1>
-            <span className="text-textGray text-sm">@{data.username}</span>
+            <div className="flex items-center gap-1">
+              <span className="text-textGray text-sm">@{data.username}</span>
+              {data.verify_status === UserVerifyStatus.Verified && (
+                <CheckCircle className="h-4 w-4 ml-1 text-blue-500" />
+              )}
+            </div>
           </div>
           <p>{data.bio}</p>
           {/* JOB & LOCATION & DATE */}
