@@ -44,10 +44,14 @@ export function ConversationList() {
                 key={item.id}
                 className="flex items-center p-4 border-b border-zinc-800 hover:bg-zinc-900 cursor-pointer"
               >
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src={item.avatar} />
-                  <AvatarFallback>{item.name.slice(0, 2)}</AvatarFallback>
-                </Avatar>
+                <div className="relative">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={item.avatar} />
+                    <AvatarFallback>{item.name.slice(0, 2)}</AvatarFallback>
+                  </Avatar>
+                  <span className="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-500 ring-2 ring-black"></span>
+                </div>
+
                 <div className="ml-4 flex-1">
                   <div className="flex justify-between items-baseline">
                     <h3 className="font-semibold">{item.name}</h3>

@@ -12,10 +12,13 @@ export function ChatHeader({ profiles }: { profiles: any }) {
             <ArrowLeft className="h-6 w-6" />
           </Button>
         </Link>
-        <Avatar className="h-10 w-10">
-          <AvatarImage src={profiles?.data?.avatar} />
-          <AvatarFallback>{profiles?.data?.name.slice(0, 2)}</AvatarFallback>
-        </Avatar>
+        <div className="relative">
+          <Avatar className="h-10 w-10">
+            <AvatarImage src={profiles?.data?.avatar} />
+            <AvatarFallback>{profiles?.data?.name.slice(0, 2)}</AvatarFallback>
+          </Avatar>
+          <span className="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-500 ring-2 ring-black"></span>
+        </div>
         <div className="ml-4">
           <h2 className="text-xl font-semibold">{profiles?.data?.name}</h2>
           <p className="text-sm text-zinc-400">Online</p>
