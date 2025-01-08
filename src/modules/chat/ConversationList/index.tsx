@@ -5,9 +5,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useQueryGetRecharts } from "@/queries/useUsers";
 import socket from "@/utils/socket";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 export function ConversationList() {
+  const pathname = usePathname();
   const { data: recentChats, isLoading, refetch } = useQueryGetRecharts();
 
   useEffect(() => {
@@ -42,24 +44,29 @@ export function ConversationList() {
                   query: { receiver_id: item.id },
                 }}
                 key={item.id}
-                className="flex items-center p-4 border-b border-zinc-800 hover:bg-zinc-900 cursor-pointer"
               >
-                <div className="relative">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={item.avatar} />
-                    <AvatarFallback>{item.name.slice(0, 2)}</AvatarFallback>
-                  </Avatar>
-                  <span className="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-500 ring-2 ring-black"></span>
-                </div>
-
-                <div className="ml-4 flex-1">
-                  <div className="flex justify-between items-baseline">
-                    <h3 className="font-semibold">{item.name}</h3>
-                    <span className="text-sm text-zinc-400">{"2m"}</span>
+                <div
+                  className={`flex items-center p-4 border-b border-zinc-800 hover:bg-zinc-900 cursor-pointer ${
+                    pathname === `/messenger/${item.name}` ? "bg-zinc-800" : ""
+                  }`}
+                >
+                  <div className="relative">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={item.avatar} />
+                      <AvatarFallback>{item.name.slice(0, 2)}</AvatarFallback>
+                    </Avatar>
+                    <span className="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-500 ring-2 ring-black"></span>
                   </div>
-                  <p className="text-sm text-zinc-400 truncate">
-                    {"how are you?"}
-                  </p>
+
+                  <div className="ml-4 flex-1">
+                    <div className="flex justify-between items-baseline">
+                      <h3 className="font-semibold">{item.name}</h3>
+                      <span className="text-sm text-zinc-400">{"2m"}</span>
+                    </div>
+                    <p className="text-sm text-zinc-400 truncate">
+                      {"how are you?"}
+                    </p>
+                  </div>
                 </div>
               </Link>
             ))}
