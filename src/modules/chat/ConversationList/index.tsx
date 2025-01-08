@@ -1,48 +1,64 @@
-/* eslint-disable no-unused-vars */
+"use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useQueryGetRecharts } from "@/queries/useUsers";
+import socket from "@/utils/socket";
 import Link from "next/link";
+import { useEffect } from "react";
 
-interface Conversation {
-  id: number;
-  name: string;
-  username: string;
-  avatar: string;
-}
+export function ConversationList() {
+  const { data: recentChats, isLoading, refetch } = useQueryGetRecharts();
 
-interface ConversationListProps {
-  listReceiver: Conversation[] | any;
-}
+  useEffect(() => {
+    socket.on("update_recent_chats", () => {
+      refetch();
+    });
+  }, [refetch]);
 
-export function ConversationList({ listReceiver }: ConversationListProps) {
   return (
-    <div className="w-1/6 border-r border-zinc-800 hidden md:block border-l">
+    <div className="w-64 xl:w-80 border-r border-zinc-800 hidden md:block border-l">
       <div className="p-4 border-b border-zinc-800">
         <h2 className="text-xl font-semibold">Messages</h2>
       </div>
       <ScrollArea className="h-[calc(100vh-60px)]">
-        {listReceiver.map((item: any) => (
-          <Link
-            href={{
-              pathname: `/messenger/${item.name}`,
-              query: { receiver_id: item.id },
-            }}
-            key={item.id}
-            className="flex items-center p-4 border-b border-zinc-800 hover:bg-zinc-900 cursor-pointer"
-          >
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={item.avatar} />
-              <AvatarFallback>{item.name.slice(0, 2)}</AvatarFallback>
-            </Avatar>
-            <div className="ml-4 flex-1">
-              <div className="flex justify-between items-baseline">
-                <h3 className="font-semibold">{item.name}</h3>
-                {/* <span className="text-sm text-zinc-400">{2}</span> */}
+        {isLoading
+          ? Array.from({ length: 5 }).map((_, index) => (
+              <div
+                key={index}
+                className="flex items-center p-4 border-b border-zinc-800"
+              >
+                <Skeleton className="h-10 w-10 rounded-full" />
+                <div className="ml-4 flex-1">
+                  <Skeleton className="h-4 w-3/5 mb-2" />
+                  <Skeleton className="h-3 w-4/5" />
+                </div>
               </div>
-              {/* <p className="text-sm text-zinc-400 truncate">{0}</p> */}
-            </div>
-          </Link>
-        ))}
+            ))
+          : recentChats.data.map((item: any) => (
+              <Link
+                href={{
+                  pathname: `/messenger/${item.name}`,
+                  query: { receiver_id: item.id },
+                }}
+                key={item.id}
+                className="flex items-center p-4 border-b border-zinc-800 hover:bg-zinc-900 cursor-pointer"
+              >
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src={item.avatar} />
+                  <AvatarFallback>{item.name.slice(0, 2)}</AvatarFallback>
+                </Avatar>
+                <div className="ml-4 flex-1">
+                  <div className="flex justify-between items-baseline">
+                    <h3 className="font-semibold">{item.name}</h3>
+                    <span className="text-sm text-zinc-400">{"2m"}</span>
+                  </div>
+                  <p className="text-sm text-zinc-400 truncate">
+                    {"how are you?"}
+                  </p>
+                </div>
+              </Link>
+            ))}
       </ScrollArea>
     </div>
   );

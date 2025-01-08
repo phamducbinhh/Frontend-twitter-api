@@ -31,3 +31,17 @@ export const useQueryConversation = (
     retry: false,
   });
 };
+export const useQueryGetRecharts = (
+  options?: Omit<UseQueryOptions<any>, "queryKey" | "queryFn">
+) => {
+  return useQuery({
+    ...options,
+    queryKey: ["recentChats"],
+    queryFn: async () => {
+      const response = await userApiRequest.getReceiverList({});
+      if (response.status === "error") throw new Error(response.data.message);
+      return response;
+    },
+    retry: false,
+  });
+};

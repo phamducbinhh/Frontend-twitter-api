@@ -55,7 +55,7 @@ export default function MessengerModule({
   // Cập nhật tin nhắn từ API khi conversation thay đổi
   useEffect(() => {
     if (conversation?.data) {
-      setMessages((prev) => [...prev, ...conversation?.data.conversations]);
+      setMessages(conversation?.data.conversations);
     }
   }, [conversation]);
 

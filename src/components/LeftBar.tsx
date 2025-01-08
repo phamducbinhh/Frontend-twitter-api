@@ -68,11 +68,11 @@ const LeftBar = () => {
       {/* LOGO MENU BUTTON */}
       <div className="flex flex-col gap-4 text-lg items-center xxl:items-start">
         {/* LOGO */}
-        <Link href="/" className="p-2 rounded-full hover:bg-[#181818] ">
-          <Image path="icons/logo.svg" alt="logo" w={24} h={24} />
-        </Link>
+        <div className="p-4">
+          <h1 className="text-xl font-bold hidden md:block">Twitter Clone</h1>
+        </div>
         {/* MENU LIST */}
-        <div className="flex flex-col gap-4">
+        <nav className="flex flex-col gap-4">
           {menuList.map((item) => (
             <Link
               href={item.link}
@@ -88,7 +88,7 @@ const LeftBar = () => {
               <span className="hidden xxl:inline">{item.name}</span>
             </Link>
           ))}
-        </div>
+        </nav>
         {/* BUTTON */}
         <Link
           href="/compose/post"

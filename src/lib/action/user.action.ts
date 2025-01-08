@@ -47,9 +47,8 @@ class UserAction {
   }
 
   async getReceiverList() {
-    const token = (await getTokenCookies()) as string;
     try {
-      const response = await userApiRequest.getReceiverList({ token });
+      const response = await userApiRequest.getReceiverList();
 
       if (!response) {
         throw new Error(OBJECT_TYPE_ERROR.NO_RESPONSE);

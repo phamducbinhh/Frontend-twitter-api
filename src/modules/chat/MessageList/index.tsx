@@ -23,18 +23,16 @@ export function MessageList({ messages, user_id }: MessageListProps) {
           }`}
         >
           <div
-            className={`max-w-xs md:max-w-md px-4 py-2 rounded-2xl ${
+            className={`max-w-xs md:max-w-md rounded-lg p-3 ${
               item.sender_id === user_id
                 ? "bg-blue-600 text-white"
                 : "bg-zinc-800 text-zinc-200"
             } shadow-md`}
           >
-            <p className="text-sm">{item.content}</p>
-            {item.sender_id !== user_id && (
-              <span className="text-xs mt-1 block text-zinc-400">
-                {formatTime(item.createdAt)}
-              </span>
-            )}
+            <p className="text-sm text-white">{item.content}</p>
+            <span className="text-xs mt-1 block text-zinc-400">
+              {formatTime(item.createdAt)}
+            </span>
           </div>
         </div>
       ))}
