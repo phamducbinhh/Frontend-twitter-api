@@ -1,11 +1,29 @@
+"use client";
 import LeftBar from "@/components/LeftBar";
 import { ConversationList } from "@/modules/chat/ConversationList";
+import { useVerifiedUserValidator } from "@/queries/useAuth";
+import socket from "@/utils/socket";
+import { useEffect } from "react";
 
-export default async function ChatLayout({
+export default function ChatLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { data: account } = useVerifiedUserValidator();
+  const { id: user_id, verify_status } = account?.data || {};
+
+  useEffect(() => {
+    if (!user_id) return;
+
+    socket.auth = { user_id, verify_status };
+    socket.connect();
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [user_id, verify_status]);
+
   return (
     <div className="flex h-screen bg-black text-white">
       <div className="px-2 xsm:px-4 xxl:px-8 ">

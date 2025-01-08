@@ -62,7 +62,7 @@ export function ConversationList() {
             </div>
           ))
         ) : (
-          recentChats.data.map((item: any) => (
+          recentChats?.data.map((item: any) => (
             <Link
               href={{
                 pathname: `/messenger/${item.name}`,

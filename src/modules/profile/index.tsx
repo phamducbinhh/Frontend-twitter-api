@@ -45,7 +45,14 @@ export default function ProfileModule({ data }: any) {
             <Image path="icons/explore.svg" alt="more" w={20} h={20} />
           </div>
           <div className="w-9 h-9 flex items-center justify-center rounded-full border-[1px] border-gray-500 cursor-pointer">
-            <Image path="icons/message.svg" alt="more" w={20} h={20} />
+            <Link
+              href={{
+                pathname: `/messenger/${data.name}`,
+                query: { receiver_id: data.id },
+              }}
+            >
+              <Image path="icons/message.svg" alt="more" w={20} h={20} />
+            </Link>
           </div>
           <button className="py-2 px-4 bg-white text-black font-bold rounded-full">
             Follow
