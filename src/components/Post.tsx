@@ -1,4 +1,5 @@
 import { TweetType } from "@/constants/enums";
+import { formatLastChangedTime } from "@/helpers";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import Link from "next/link";
 import CustomImage from "./CustomImage";
@@ -35,10 +36,12 @@ const Post = async ({ type, data }: { type?: TweetType; data?: any }) => {
             type === TweetType.Tweet && "hidden"
           } relative w-10 h-10 rounded-full overflow-hidden`}
         >
-          <Avatar>
-            <AvatarImage src={data?.author?.avatar} />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          <Link href={`/${data?.author?.name}`}>
+            <Avatar>
+              <AvatarImage src={data?.author?.avatar} />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </Link>
         </div>
         {/* CONTENT */}
         <div className="flex-1 flex flex-col gap-2">
@@ -69,7 +72,9 @@ const Post = async ({ type, data }: { type?: TweetType; data?: any }) => {
                   @{data?.author?.username}
                 </span>
                 {type !== TweetType.Tweet && (
-                  <span className="text-textGray">1 day ago</span>
+                  <span className="text-textGray">
+                    {formatLastChangedTime(data.createdAt)}
+                  </span>
                 )}
               </div>
             </Link>

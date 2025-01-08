@@ -11,7 +11,7 @@ interface TweetResponse<T> {
 }
 async function getPostFeedTweet(): Promise<TweetResponse<any>> {
   return (await tweetAction.getActionNewsFeedTweet({
-    limit: 10,
+    limit: 20,
   })) as TweetResponse<any>;
 }
 export default async function Feed() {

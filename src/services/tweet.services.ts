@@ -12,7 +12,13 @@ class TweetApiRequest {
   }): Promise<any> {
     return apiBaseServiceInstance.Http({
       path: APP_API_ENDPOINT.TWITTER.GET_NEWS_FEED_TWEET({ limit }),
-      config: { method: METHOD_TYPE.GET, token },
+      config: {
+        method: METHOD_TYPE.GET,
+        token,
+        next: {
+          revalidate: 60,
+        },
+      },
     });
   }
 }
